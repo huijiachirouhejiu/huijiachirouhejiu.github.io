@@ -1,0 +1,50 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta name="generator" content="Hexo 3.8.0"><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="author" content="liuxc"><link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml"><link rel="icon" href="/favicon.png"><title>圆周率 π 的近似求法 - Hexo</title><link rel="stylesheet" href="/css/main.css"><link rel="stylesheet" href="/js/fancybox/jquery.fancybox.min.css"><!--[if lt IE 9]><script>(function(a,b){a="abbr article aside audio bdi canvas data datalist details dialog figcaption figure footer header hgroup main mark meter nav output progress section summary template time video".split(" ");for(b=a.length-1;b>=0;b--)document.createElement(a[b])})()</script><![endif]--><script src="/js/jquery-3.1.1.min.js"></script><script src="/js/fancybox/jquery.fancybox.min.js"></script></head><body style="opacity:0"><header class="head"><h1 class="head-title u-fl"><a href="/">Hexo</a></h1><nav class="head-nav u-fr"><ul class="head-nav__list"><li class="head-nav__item"><a class="head-nav__link" href="/archives">目录</a></li></ul></nav></header><main class="main"><article class="post"><header class="post__head"> <time class="post__time" datetime="2019-01-22T03:30:18.278Z">January 22, 2019</time><h1 class="post__title"><a href="/2019/01/22/圆周率π的近似求法/">圆周率 π 的近似求法</a></h1><div class="post__main echo"><h5 id="这只是个单纯的数学问题"><a href="#这只是个单纯的数学问题" class="headerlink" title="这只是个单纯的数学问题"></a>这只是个单纯的数学问题</h5><p>在我看来计算机只能进行机械运算,不知变通.其所认识的只有数字的数值大小.对面积,长度,等现实事务并无概念.所以,当我们在用计算机进行圆周率求解时,需将各种概念进行参数化,用数值计算来进行近似求解.</p>
+<p>#####下面是我给出的圆周率求解模型<br>我们都知道圆的面积公式为 S= πr² </p>
+<p>正方形的面积公式为 S = a²</p>
+<p>我们取单位长度1 为圆的半径和正方形边长,取第一象限画出图形<br><img src="http://www.liuxuchao.top/usr/uploads/2017/12/2953873170.png" alt=""></p>
+<p>其中正方形面积为 S = 1 ;</p>
+<p>扇形面积为 S = π/4 ;</p>
+<p>则扇形和正方形的面积比为 π/4</p>
+<p>由此我们可以近似计算出圆周率 π 的值.</p>
+<h5 id="求解方法"><a href="#求解方法" class="headerlink" title="求解方法"></a>求解方法</h5><p>在这种模型下求解方法有很多,我选择的是微元法.</p>
+<p>我们可以将这个正方形进行分割,比如 在 x 轴方向上平均分成 100 份,在 y 轴方向上也平均分成 100 份,这样整个图形就被分成了 100x100=10000 份</p>
+<p>由于每个单元都比较小,这里我们假设每个单元的面积全都集中在单元方格的中心,然后开始找出在扇形内的单元个数,就能近似求出扇形面积,从而计算出 圆周率 π = 4 * S ;</p>
+<p>这种算法对于单元的划分越细最后求出的结果越精确,当单元划分无限大时,求出的结果应该为准确值 π ,但这种情况好像不会发生(哈哈)</p>
+<h5 id="实现代码"><a href="#实现代码" class="headerlink" title="实现代码"></a>实现代码</h5><pre><code> public static void main(String[] args) {
+    System.out.println(&quot;请输入你想划分的网格数:&quot;);
+    Scanner sc = new Scanner(System.in);
+    //获取每条边被分成多少格
+    int num = sc.nextInt();
+    //声明扇形中所有单元格个数
+    int sum = 0;
+    for (int x = 0; x &lt; num; x++) {
+        for(int y = 0; y &lt; num; y++){
+            double newX = (2*x+1)*1.0/(2*num);
+            double newY = (2*y+1)*1.0/(2*num);
+            //判断该节点是否在扇形中
+            if((newX*newX+newY*newY)&lt;=1){
+                sum ++;
+            }else{
+                break;
+            }
+        }
+    }
+    //通过扇形中单元个数和总单元个数的比值来确定 圆周率 π 的大小
+    System.out.println(&quot;圆周率π的大小为 π = &quot;+ (sum*4*1.0/(num*num)));
+}
+</code></pre><h1 id="注意-int-的取值范围有限-当你需要的精度比较高时可以采用更大容器"><a href="#注意-int-的取值范围有限-当你需要的精度比较高时可以采用更大容器" class="headerlink" title="注意 int 的取值范围有限,当你需要的精度比较高时可以采用更大容器."></a>注意 int 的取值范围有限,当你需要的精度比较高时可以采用更大容器.</h1><hr>
+<h4 id="下面要说的就很尴尬了-突然想起有积分这回事是专门用来求面积的-然后写了个积分求面积的-运算量好像是成指数下降"><a href="#下面要说的就很尴尬了-突然想起有积分这回事是专门用来求面积的-然后写了个积分求面积的-运算量好像是成指数下降" class="headerlink" title="下面要说的就很尴尬了,突然想起有积分这回事是专门用来求面积的,然后写了个积分求面积的,运算量好像是成指数下降."></a>下面要说的就很尴尬了,突然想起有积分这回事是专门用来求面积的,然后写了个积分求面积的,运算量好像是成指数下降.</h4><pre><code>public static void main(String[] args) {
+    System.out.println(&quot;请输入你想划分的网格数:&quot;);
+    Scanner sc = new Scanner(System.in);
+    //获取每条边被分成多少格
+    int num = sc.nextInt();
+    double sum = 0;
+    for(int x = 0; x &lt; num; x++){
+        double newX = (2*x+1)*1.0/(2*num);
+        double newY = Math.sqrt(1-newX*newX);
+        sum += newY/num;
+    }
+    System.out.println(&quot;圆周率π的大小为 π = &quot;+sum*4);
+
+}
+</code></pre></div></header></article><div class="comments" id="lv-container" data-id="city" data-uid="your uid"><script>(function(d, s) {var j, e = d.getElementsByTagName(s)[0];if (typeof LivereTower === 'function') { return; } j = d.createElement(s);j.src = 'https://cdn-city.livere.com/js/embed.dist.js';j.async = true;e.parentNode.insertBefore(j, e);})(document, 'script');</script></div></main><footer class="foot"><div class="foot-copy">&copy; 2016-2019 liuxc</div></footer><script src="/js/scroller.js"></script><script src="/js/main.js"></script></body></html>
